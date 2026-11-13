@@ -6,9 +6,10 @@ def has_app_permission():
     if frappe.session.user == "Administrator":
         return True
 
-    roles = frappe.get_roles()
-    education_roles = ["Education Manager"]
-    if any(role in roles for role in education_roles):
-        return True
+    if frappe.get_cached_value("User", frappe.session.user, "user_type") != "System User":
+        return False
 
-    return False
+    return bool(
+        {"System Manager", "Education Manager", "Instructor", "School Teacher"}
+        & set(frappe.get_roles())
+    )
