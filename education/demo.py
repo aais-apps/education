@@ -23,6 +23,17 @@ def complete_demo():
 	settings.current_academic_year = year
 	settings.current_academic_term = term
 	settings.save()
+	builder_settings = frappe.get_single("Builder Settings")
+	if "aais-demo-marker" not in (builder_settings.body_html or ""):
+		builder_settings.body_html = (
+			(builder_settings.body_html or "")
+			+ '<div id="aais-demo-marker" role="note" style="position:fixed;bottom:12px;right:12px;z-index:9999;padding:8px 12px;border:1px solid #d1d5db;border-radius:8px;background:#fff;color:#374151;font:14px/1.5 sans-serif;box-shadow:0 2px 8px #0002">ডেমো • নমুনা তথ্য</div>'
+		)
+	if 'name="robots"' not in (builder_settings.head_html or ""):
+		builder_settings.head_html = (
+			builder_settings.head_html or ""
+		) + '<meta name="robots" content="noindex,nofollow">'
+	builder_settings.save()
 
 	structure_name = frappe.db.get_value("Fee Structure", {"program": program, "academic_year": year}, "name")
 	if not structure_name:
