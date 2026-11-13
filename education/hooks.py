@@ -180,6 +180,17 @@ has_permission = {
     "Student": "education.education.doctype.student.student.has_permission",
 }
 
+# Website users must remain scoped when accessing the generic resource API,
+# reports and print views; filtering only the Vue portal is insufficient.
+for student_doctype in (
+    "Assessment Result", "Program Enrollment", "Course Enrollment", "Student Attendance",
+    "Fees", "Sales Invoice", "Student Leave Application", "Course Schedule", "Student Group",
+):
+    permission_query_conditions[student_doctype] = "education.permissions.query_conditions"
+    has_permission[student_doctype] = "education.permissions.has_permission"
+
+after_migrate = "education.install.create_invoice_permissions"
+
 # DocType Class
 # ---------------
 # Override standard doctype classes

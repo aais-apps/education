@@ -95,16 +95,12 @@ def create_guardian_role():
 
 
 def create_invoice_permissions():
-    add_permission("Sales Invoice", "Student", 0)
-
-    doctype = "Sales Invoice"
-    role = "Student"
-    permlevel = 0
-    ptype = ["read", "write", "print"]
-
-    for p in ptype:
-        # update permissions
-        update_permission_property(doctype, role, permlevel, p, 1)
+    for role in ("Student", "Guardian"):
+        add_permission("Sales Invoice", role, 0)
+        for permission in ("read", "print"):
+            update_permission_property("Sales Invoice", role, 0, permission, 1)
+        for permission in ("write", "create", "delete", "submit", "cancel", "amend", "share", "email", "export", "import", "report"):
+            update_permission_property("Sales Invoice", role, 0, permission, 0)
 
 
 def get_permissions():

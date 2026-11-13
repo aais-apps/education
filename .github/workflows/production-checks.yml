@@ -1,0 +1,23 @@
+name: AAIS source checks
+on:
+  push:
+    branches: [production]
+  pull_request:
+    branches: [production]
+permissions:
+  contents: read
+jobs:
+  source:
+    name: Source validation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.14'
+      - name: Check Python syntax and whitespace
+        run: |
+          python -m compileall -q education
+          git diff --check HEAD^ HEAD

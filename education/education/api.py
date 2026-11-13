@@ -538,6 +538,7 @@ def update_email_group(doctype: str, name: str):
 
 @frappe.whitelist()
 def get_current_enrollment(student: str, academic_year: str | None = None):
+    check_permission(student, "enrollment")
     # If academic_year is not passed, use today's date
     compare_date = getdate(academic_year) if academic_year else getdate(today())
 
@@ -810,7 +811,21 @@ def get_course_list_based_on_program(program_name: str):
 
 @frappe.whitelist()
 def get_course_schedule_for_student(program_name: str, student_groups: list):
-    student_groups = [sg.get("label") for sg in student_groups]
+    requested_groups = {sg.get("label") for sg in student_groups if isinstance(sg, dict)}
+    user = frappe.session.user
+    if user != "Administrator" and frappe.db.get_value("User", user, "user_type") == "Website User":
+        students = [row["student"] for row in get_guardian_students()]
+        own_student = _resolve_portal_student()
+        if own_student:
+            students.append(own_student)
+        allowed_groups = {
+            group["label"]
+            for student in students
+            for group in get_student_groups(student, program_name)
+        }
+        if not requested_groups or not requested_groups.issubset(allowed_groups):
+            raise frappe.PermissionError(_("You are not authorized to access this schedule"))
+    student_groups = list(requested_groups)
 
     schedule = frappe.db.get_list(
         "Course Schedule",
@@ -827,6 +842,7 @@ def get_course_schedule_for_student(program_name: str, student_groups: list):
         ],
         filters={"program": program_name, "student_group": ["in", student_groups]},
         order_by="schedule_date asc",
+        limit_page_length=1000,
     )
 
     return schedule
@@ -834,6 +850,7 @@ def get_course_schedule_for_student(program_name: str, student_groups: list):
 
 @frappe.whitelist()
 def apply_leave(leave_data: dict, program_name: str):
+    check_permission(leave_data.get("student"), "leave application")
     attendance_based_on_course_schedule = frappe.db.get_single_value(
         "Education Settings", "attendance_based_on_course_schedule"
     )
@@ -917,6 +934,7 @@ def get_student_invoices(student: str):
             "grand_total",
         ],
         order_by="status desc",
+        limit_page_length=1000,
     )
 
     for si in sales_invoice_list:
@@ -1007,11 +1025,14 @@ def get_student_attendance(student: str, student_group: str):
             "docstatus": 1,
         },
         fields=["date", "status", "name"],
+        limit_page_length=1000,
     )
 
 
 def check_permission(student, resource_type):
     user = frappe.session.user
+    if not student or user == "Guest":
+        raise frappe.PermissionError(_("Authentication and a student record are required"))
     if user == "Administrator":
         return
 
