@@ -143,9 +143,44 @@ def complete_demo():
 			frappe.get_doc("Payment Entry", payment_name).cancel()
 	if students:
 		frappe.db.set_value("Fee Schedule", schedule_name, "status", "Invoice Created")
+	# The retired seed posted both Fees and Sales Invoices for the same students
+	# and billing period. Reverse the duplicate legacy postings through normal
+	# cancellation so their ledger history remains auditable.
+	cancelled_fees = []
+	for name in frappe.get_all(
+		"Fees",
+		filters={
+			"student": ["in", [student.name for student in students]],
+			"fee_schedule": schedule_name,
+			"posting_date": "2026-11-01",
+			"docstatus": 1,
+		},
+		pluck="name",
+	):
+		frappe.get_doc("Fees", name).cancel()
+		cancelled_fees.append(name)
+	for name in frappe.get_all(
+		"Fee Schedule",
+		filters={
+			"fee_structure": structure_name,
+			"posting_date": "2026-11-01",
+			"docstatus": 0,
+			"name": ["!=", schedule_name],
+		},
+		pluck="name",
+	):
+		if not frappe.db.exists("Sales Invoice", {"fee_schedule": name}) and not frappe.db.exists(
+			"Fees", {"fee_schedule": name}
+		):
+			frappe.delete_doc("Fee Schedule", name)
 	# Modern fee invoices own the ledger. Creating submitted legacy Fees as well
 	# would charge each student a second time.
-	return {"created_invoices": created, "fee_schedule": schedule_name, "current_term": term}
+	return {
+		"created_invoices": created,
+		"fee_schedule": schedule_name,
+		"current_term": term,
+		"cancelled_duplicate_fees": cancelled_fees,
+	}
 
 
 def verify_access():
