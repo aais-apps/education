@@ -100,7 +100,7 @@ const paymentOptions = createResource({
       doctype: 'Sales Invoice',
       docname: props.row.invoice,
       phone: billingDetails.mobile_number,
-      country: billingDetails.country,
+      currency: props.row.currency,
     }
   },
 })

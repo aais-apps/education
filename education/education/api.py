@@ -964,7 +964,10 @@ def get_student_invoices(student: str):
 
     print_format = get_fees_print_format() or "Standard"
 
-    return {"invoices": student_sales_invoices, "print_format": print_format}
+    from education.education.billing import online_payments_enabled
+
+    return {"invoices": student_sales_invoices, "print_format": print_format,
+            "online_payment_enabled": online_payments_enabled(), "demo": bool(frappe.conf.get("demo_site"))}
 
 
 def get_currency_symbol(currency):
@@ -981,6 +984,8 @@ def get_posting_date_from_payment_entry_against_sales_invoice(sales_invoice):
         .on(payment_entry.name == payment_entry_reference.parent)
         .select(payment_entry.posting_date)
         .where(payment_entry_reference.reference_name == sales_invoice)
+        .where(payment_entry_reference.reference_doctype == "Sales Invoice")
+        .where(payment_entry.docstatus == 1)
     ).run(as_dict=1)
 
     if len(q) > 0:

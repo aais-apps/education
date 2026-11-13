@@ -1,5 +1,8 @@
 <template>
   <div v-if="tableData.rows.length > 0" class="px-5 py-4">
+    <p v-if="!onlinePaymentEnabled" class="mb-4 rounded border border-gray-200 bg-gray-50 p-3 text-sm text-gray-700" role="status">
+      {{ isDemo ? 'Demo invoices and payments are sample records. Online payment is disabled.' : 'Online payment is unavailable. Please contact the school office.' }}
+    </p>
     <ListView
       :columns="tableData.columns"
       :rows="tableData.rows"
@@ -33,15 +36,15 @@
             :label="item"
           />
           <Button
-            v-if="column.key === 'cta' && row.status === 'Paid'"
+            v-if="column.key === 'cta' && (row.status === 'Paid' || !onlinePaymentEnabled)"
             @click="openInvoicePDF(row)"
             class="hover:bg-gray-900 hover:text-white"
             icon-left="download"
-            label="Download Invoice"
+            :label="row.status === 'Paid' ? 'Download Invoice' : 'View Invoice'"
           />
 
           <Button
-            v-if="column.key === 'cta' && row.status !== 'Paid'"
+            v-if="column.key === 'cta' && row.status !== 'Paid' && onlinePaymentEnabled"
             @click="openModal(row)"
             class="hover:bg-gray-900 hover:text-white flex flex-column items-center justify-center"
             icon-left="credit-card"
@@ -51,7 +54,7 @@
       </ListRow>
     </ListView>
     <FeesPaymentDialog
-      v-if="currentRow"
+      v-if="currentRow && onlinePaymentEnabled"
       :row="currentRow"
       :student="studentInfo"
       v-model="showPaymentDialog"
@@ -82,6 +85,8 @@ import MissingData from '@/components/MissingData.vue'
 import { createToast } from '@/utils'
 
 const { studentInfo } = storeToRefs(studentStore())
+const onlinePaymentEnabled = ref(false)
+const isDemo = ref(false)
 
 const feesResource = createResource({
   url: 'education.education.api.get_student_invoices',
@@ -92,6 +97,8 @@ const feesResource = createResource({
   },
   onSuccess: (response) => {
     printFormat = response?.print_format
+    onlinePaymentEnabled.value = Boolean(response?.online_payment_enabled)
+    isDemo.value = Boolean(response?.demo)
     let invoices = response?.invoices
     invoices = invoices.sort((a, b) => {
       const statusOrder = { Overdue: 0, Unpaid: 1, Paid: 2 }

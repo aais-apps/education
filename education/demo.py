@@ -60,6 +60,10 @@ def complete_demo():
 		schedule.submit()
 		schedule_name = schedule.name
 
+	schedule = frappe.get_doc("Fee Schedule", schedule_name)
+	if schedule.docstatus == 0:
+		schedule.submit()
+
 	students = frappe.get_all(
 		"Student", filters={"user": ["like", "student.%@paradox-bd.com"]}, fields=["name", "customer", "user"]
 	)
@@ -102,6 +106,7 @@ def complete_demo():
 		if (
 			student.user in ["student.tanvir@paradox-bd.com", "student.fatima@paradox-bd.com"]
 			and invoice.outstanding_amount
+			and invoice.name in created
 		):
 			from erpnext.accounts.doctype.payment_entry.payment_entry import get_payment_entry
 
@@ -111,6 +116,22 @@ def complete_demo():
 			payment.reference_no = "AAIS-DEMO-" + invoice.name
 			payment.insert()
 			payment.submit()
+	# Keep the showcase's newer Tanvir bill unpaid. Reverse only a payment made
+	# by this completion script; existing/manual payments are never touched.
+	tanvir = frappe.db.get_value("Student", {"user": "student.tanvir@paradox-bd.com"}, "name")
+	bills = frappe.get_all(
+		"Sales Invoice",
+		filters={"student": tanvir, "fee_schedule": schedule_name, "docstatus": 1},
+		fields=["name"],
+		order_by="posting_date asc, creation asc",
+	)
+	for bill in bills[1:]:
+		for payment_name in frappe.get_all(
+			"Payment Entry", filters={"reference_no": "AAIS-DEMO-" + bill.name, "docstatus": 1}, pluck="name"
+		):
+			frappe.get_doc("Payment Entry", payment_name).cancel()
+	if students:
+		frappe.db.set_value("Fee Schedule", schedule_name, "status", "Invoice Created")
 	# Modern fee invoices own the ledger. Creating submitted legacy Fees as well
 	# would charge each student a second time.
 	return {"created_invoices": created, "fee_schedule": schedule_name, "current_term": term}
@@ -126,7 +147,9 @@ def verify_access():
 	original = frappe.session.user
 	results = []
 	try:
-		users = frappe.get_all("User", filters={"enabled": 1, "user_type": "Website User", "name": ["!=", "Guest"]}, pluck="name")
+		users = frappe.get_all(
+			"User", filters={"enabled": 1, "user_type": "Website User", "name": ["!=", "Guest"]}, pluck="name"
+		)
 		all_students = frappe.get_all("Student", pluck="name")
 		for user in users:
 			frappe.set_user(user)
@@ -135,7 +158,12 @@ def verify_access():
 				try:
 					rows = frappe.get_list(doctype, fields=["name", "student"], limit_page_length=1000)
 				except frappe.PermissionError:
-					assert doctype not in ("Assessment Result", "Program Enrollment", "Student Attendance", "Sales Invoice")
+					assert doctype not in (
+						"Assessment Result",
+						"Program Enrollment",
+						"Student Attendance",
+						"Sales Invoice",
+					)
 					rows = []
 				assert all(row.student in allowed for row in rows), (user, doctype, "list leak")
 				for student in set(all_students) - allowed:

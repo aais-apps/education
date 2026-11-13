@@ -1,148 +1,99 @@
+"""Optional Razorpay checkout. Demo sites never initiate real payments."""
+from decimal import ROUND_HALF_UP, Decimal
+
 import frappe
+from erpnext.accounts.doctype.payment_entry.payment_entry import get_payment_entry
 from frappe import _
-from frappe.utils import validate_phone_number, cint, nowdate
-import razorpay
-from erpnext.accounts.doctype.journal_entry.journal_entry import (
-    get_payment_entry_against_invoice,
-)
-from erpnext.accounts.doctype.payment_entry.test_payment_entry import get_payment_entry
+from frappe.utils import nowdate, validate_phone_number
+
+from education.education.api import check_permission
 
 
-def get_details(docname):
-    details = frappe.db.get_value(
-        "Sales Invoice", docname, ["name", "currency", "outstanding_amount"], as_dict=1
-    )
-    return details
+def online_payments_enabled():
+    return bool(not frappe.conf.get("demo_site") and frappe.conf.get("enable_education_online_payments"))
+
+
+def minor_amount(amount):
+    return int((Decimal(str(amount)) * 100).quantize(Decimal("1"), rounding=ROUND_HALF_UP))
+
+
+def authorized_invoice(name):
+    invoice = frappe.get_doc("Sales Invoice", name)
+    check_permission(invoice.student, "invoice payment")
+    if invoice.docstatus != 1:
+        frappe.throw(_("Only submitted invoices can be paid"))
+    if not online_payments_enabled():
+        frappe.throw(_("Online payments are disabled. Please contact the school office."))
+    return invoice
 
 
 def get_client():
+    import razorpay
     settings = frappe.get_single("Education Settings")
-    razorpay_key = settings.razorpay_key
-    razorpay_secret = settings.get_password("razorpay_secret", raise_exception=True)
-    if not razorpay_key and not razorpay_secret:
-        frappe.throw(
-            _(
-                "There is a problem with the payment gateway. Please contact the Administrator to proceed."
-            )
-        )
-    return razorpay.Client(auth=(razorpay_key, razorpay_secret))
-
-
-def create_order(client, amount, currency):
-    try:
-        return client.order.create(
-            {
-                "amount": cint(amount) * 100,
-                "currency": currency,
-            }
-        )
-    except Exception as e:
-        frappe.throw(
-            _(
-                "Error during payment: {0} Please contact the Administrator. Amount {1} Currency {2} Formatted {3}"
-            ).format(str(e), amount, currency, cint(amount))
-        )
+    key = settings.razorpay_key
+    secret = settings.get_password("razorpay_secret", raise_exception=False)
+    if not key or not secret:
+        frappe.throw(_("Online payment is not configured. Please contact the school office."))
+    return razorpay.Client(auth=(key, secret))
 
 
 @frappe.whitelist()
-def get_payment_options(
-    doctype: str, docname: str, phone: str, currency: str | None = None
-):
-    if not frappe.db.exists(doctype, docname):
-        frappe.throw(_("Invalid document provided."))
+def get_payment_options(doctype: str, docname: str, phone: str, currency: str | None = None):
+    if doctype != "Sales Invoice":
+        raise frappe.PermissionError(_("Unsupported payment document"))
+    invoice = authorized_invoice(docname)
+    if invoice.outstanding_amount <= 0:
+        frappe.throw(_("This invoice has no outstanding balance"))
     validate_phone_number(phone_number=phone, throw=True)
-    details = get_details(docname)
     client = get_client()
-    order = create_order(client, details.outstanding_amount, details.currency)
-    options = {
-        "key_id": frappe.db.get_single_value("Education Settings", "razorpay_key"),
+    order = client.order.create({
+        "amount": minor_amount(invoice.outstanding_amount), "currency": invoice.currency,
+        "notes": {"invoice": invoice.name},
+    })
+    return {
+        "key": frappe.db.get_single_value("Education Settings", "razorpay_key"),
         "name": frappe.db.get_single_value("Website Settings", "app_name"),
-        "description": _("Payment for {0} course").format(
-            details["outstanding_amount"]
-        ),
-        "order_id": order["id"],
-        "amount": cint(order["amount"]) * 100,
-        "currency": order["currency"],
-        "prefill": {
-            "name": frappe.db.get_value("User", frappe.session.user, "full_name"),
-            "email": frappe.session.user,
-            "contact": phone,
-        },
+        "description": _("School fees"), "order_id": order["id"],
+        "amount": order["amount"], "currency": order["currency"],
+        "prefill": {"email": frappe.session.user, "contact": phone},
     }
-    return options
-
-
-def create_razorpay_payment_record(args, status):
-    payment_record = frappe.new_doc("Payment Record")
-    payment_record.order_id = args.get("razorpay_order_id", "")
-    payment_record.payment_id = args.get("razorpay_payment_id", "")
-    payment_record.signature = args.get("razorpay_signature", "")
-    payment_record.against_invoice = args.get("name", "")
-    payment_record.status = status
-    payment_record.amount = args.get("outstanding_amount", "")
-    if status == "Captured":
-        payment_record.student = args.get("id", "")
-        payment_record.mobile = args.get("mobile_number", "")
-        payment_record.email = args.get("email", "")
-        payment_record.address_line_1 = args.get("address_line_1", "")
-        payment_record.currency = args.get("currency", "")
-        payment_record.address_line_2 = args.get("address_line_2", "")
-        payment_record.city = args.get("city", "")
-        payment_record.state = args.get("state", "")
-        payment_record.country = args.get("country", "")
-        payment_record.pincode = args.get("pincode", "")
-    if status == "Failed":
-        payment_record.failure_description = args.get("description", "")
-    payment_record.save(ignore_permissions=True)
-    return payment_record
 
 
 @frappe.whitelist()
 def handle_payment_success(response: dict, against_invoice: str, billing_details: dict):
-    if frappe.db.exists(
-        "Payment Record",
-        {
-            "order_id": response["razorpay_order_id"],
-            "payment_id": response["razorpay_payment_id"],
-            "status": "Captured",
-        },
-    ):
-        return
-
+    invoice = authorized_invoice(against_invoice)
+    # Serialize callbacks for one invoice, including retries from different tabs.
+    frappe.db.sql("SELECT name FROM `tabSales Invoice` WHERE name=%s FOR UPDATE", invoice.name)
+    invoice.reload()
     client = get_client()
     client.utility.verify_payment_signature(response)
-    payment_details = get_details(against_invoice)
-
-    payment_record = create_razorpay_payment_record(
-        {**response, **billing_details, **payment_details}, "Captured"
-    )
-
-    try:
-        frappe.flags.ignore_account_permission = True
-        pe = get_payment_entry("Sales Invoice", against_invoice)
-        pe.reference_no = response["razorpay_order_id"]
-        pe.reference_date = nowdate()
-        pe.posting_date = nowdate()
-        pe.save(ignore_permissions=True)
-        pe.submit()
-
-    except Exception as e:
-        frappe.throw(_("Error during payment: {0}").format(str(e)))
+    order = client.order.fetch(response["razorpay_order_id"])
+    payment = client.payment.fetch(response["razorpay_payment_id"])
+    if order.get("notes", {}).get("invoice") != invoice.name or payment["order_id"] != order["id"]:
+        raise frappe.PermissionError(_("Payment does not belong to this invoice"))
+    if frappe.db.exists("Payment Record", {"payment_id": payment["id"], "against_invoice": invoice.name, "status": "Captured"}):
+        return {"status": "already_recorded"}
+    expected = minor_amount(invoice.outstanding_amount)
+    if expected <= 0 or payment["status"] != "captured" or payment["amount"] != expected or payment["currency"] != invoice.currency:
+        frappe.throw(_("The captured payment does not match the outstanding invoice"))
+    entry = get_payment_entry("Sales Invoice", invoice.name)
+    entry.reference_no = payment["id"]
+    entry.reference_date = nowdate()
+    entry.posting_date = nowdate()
+    entry.flags.ignore_permissions = True
+    entry.insert()
+    entry.submit()
+    frappe.get_doc({
+        "doctype": "Payment Record", "order_id": order["id"], "payment_id": payment["id"],
+        "signature": response["razorpay_signature"], "against_invoice": invoice.name,
+        "student": invoice.student, "status": "Captured", "amount": invoice.outstanding_amount,
+        "currency": invoice.currency,
+    }).insert(ignore_permissions=True)
+    return {"status": "recorded"}
 
 
 @frappe.whitelist()
 def handle_payment_failure(response: dict, against_invoice: str, billing_details: dict):
-
-    response = response["error"]
-    razorpay_date = {
-        "description": response.get("description"),
-        "razorpay_order_id": response["metadata"].get("order_id"),
-        "razorpay_payment_id": response["metadata"].get("payment_id"),
-    }
-    client = get_client()
-
-    payment_details = get_details(against_invoice)
-
-    payment_record = create_razorpay_payment_record(
-        {**razorpay_date, **billing_details, **payment_details}, "Failed"
-    )
+    authorized_invoice(against_invoice)
+    # A client-side error is not authoritative provider or accounting state.
+    return {"status": "not_recorded"}
