@@ -83,18 +83,24 @@ def create_parent_assessment_group():
 def create_student_role():
     if not frappe.db.exists("Role", "Student"):
         frappe.get_doc(
-            {"doctype": "Role", "role_name": "Student", "desk_access": 1}
+            {"doctype": "Role", "role_name": "Student", "desk_access": 0}
         ).save()
+    else:
+        frappe.db.set_value("Role", "Student", "desk_access", 0)
 
 
 def create_guardian_role():
     if not frappe.db.exists("Role", "Guardian"):
         frappe.get_doc(
-            {"doctype": "Role", "role_name": "Guardian", "desk_access": 1}
+            {"doctype": "Role", "role_name": "Guardian", "desk_access": 0}
         ).save()
+    else:
+        frappe.db.set_value("Role", "Guardian", "desk_access", 0)
 
 
 def create_invoice_permissions():
+    create_student_role()
+    create_guardian_role()
     for role in ("Student", "Guardian"):
         add_permission("Sales Invoice", role, 0)
         for permission in ("read", "print"):

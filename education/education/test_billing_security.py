@@ -75,6 +75,42 @@ class TestBillingSecurity(unittest.TestCase):
 	def test_replayed_callback_does_not_create_a_second_payment(self):
 		self.callback(replay=True)
 
+	def test_captured_payment_posts_once_through_the_accounting_service(self):
+		invoice = types.SimpleNamespace(
+			name="invoice-a", student="student-a", outstanding_amount=10, currency="BDT", reload=lambda: None
+		)
+		client = MagicMock()
+		client.order.fetch.return_value = {"id": "order-a", "notes": {"invoice": "invoice-a"}}
+		client.payment.fetch.return_value = {
+			"id": "payment-a",
+			"order_id": "order-a",
+			"amount": 1000,
+			"currency": "BDT",
+			"status": "captured",
+		}
+		with (
+			patch.object(billing, "authorized_invoice", return_value=invoice),
+			patch.object(frappe.db, "sql"),
+			patch.object(billing, "get_client", return_value=client),
+			patch.object(frappe.db, "exists", return_value=False),
+			patch.object(billing, "get_payment_entry") as accounting,
+			patch.object(frappe, "get_doc") as record,
+		):
+			result = billing.handle_payment_success(
+				{
+					"razorpay_order_id": "order-a",
+					"razorpay_payment_id": "payment-a",
+					"razorpay_signature": "signature",
+				},
+				"invoice-a",
+				{},
+			)
+			self.assertEqual(result, {"status": "recorded"})
+			accounting.assert_called_once_with("Sales Invoice", "invoice-a")
+			accounting.return_value.insert.assert_called_once()
+			accounting.return_value.submit.assert_called_once()
+			record.return_value.insert.assert_called_once_with(ignore_permissions=True)
+
 
 def run_checks():
 	result = unittest.TextTestRunner(verbosity=2).run(
@@ -114,7 +150,7 @@ def run_privacy_checks():
 					"roles": [{"role": "Student"}],
 				}
 			).insert()
-			frappe.db.set_value("User", email, "user_type", "Website User")
+			assert frappe.db.get_value("User", email, "user_type") == "Website User"
 			student = frappe.get_doc(
 				{"doctype": "Student", "first_name": suffix, "student_email_id": email, "user": email}
 			).insert()

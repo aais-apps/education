@@ -76,19 +76,27 @@ def handle_payment_success(response: dict, against_invoice: str, billing_details
     expected = minor_amount(invoice.outstanding_amount)
     if expected <= 0 or payment["status"] != "captured" or payment["amount"] != expected or payment["currency"] != invoice.currency:
         frappe.throw(_("The captured payment does not match the outstanding invoice"))
-    entry = get_payment_entry("Sales Invoice", invoice.name)
-    entry.reference_no = payment["id"]
-    entry.reference_date = nowdate()
-    entry.posting_date = nowdate()
-    entry.flags.ignore_permissions = True
-    entry.insert()
-    entry.submit()
-    frappe.get_doc({
-        "doctype": "Payment Record", "order_id": order["id"], "payment_id": payment["id"],
-        "signature": response["razorpay_signature"], "against_invoice": invoice.name,
-        "student": invoice.student, "status": "Captured", "amount": invoice.outstanding_amount,
-        "currency": invoice.currency,
-    }).insert(ignore_permissions=True)
+    payer = frappe.session.user
+    try:
+        # The provider proof and invoice ownership were checked above. The
+        # accounting service posts the verified payment without granting portal
+        # users general Payment Entry creation rights.
+        frappe.set_user("Administrator")
+        entry = get_payment_entry("Sales Invoice", invoice.name)
+        entry.reference_no = payment["id"]
+        entry.reference_date = nowdate()
+        entry.posting_date = nowdate()
+        entry.flags.ignore_permissions = True
+        entry.insert()
+        entry.submit()
+        frappe.get_doc({
+            "doctype": "Payment Record", "order_id": order["id"], "payment_id": payment["id"],
+            "signature": response["razorpay_signature"], "against_invoice": invoice.name,
+            "student": invoice.student, "status": "Captured", "amount": invoice.outstanding_amount,
+            "currency": invoice.currency,
+        }).insert(ignore_permissions=True)
+    finally:
+        frappe.set_user(payer)
     return {"status": "recorded"}
 
 
