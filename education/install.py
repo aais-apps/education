@@ -101,6 +101,7 @@ def create_guardian_role():
 def create_invoice_permissions():
     create_student_role()
     create_guardian_role()
+    restrict_academic_account_access()
     from education.permissions import STUDENT_DOCUMENTS
 
     for doctype in (*STUDENT_DOCUMENTS, "Student", "Guardian", "Course Schedule"):
@@ -122,21 +123,21 @@ def get_permissions():
             "doctype": "Sales Invoice",
             "role": "Student",
             "permlevel": 0,
-            "ptype": ["read", "write", "print"],
-        },
-        {
-            "doctype": "User",
-            "role": "Academics User",
-            "permlevel": 0,
-            "ptype": ["read", "write", "create"],
-        },
-        {
-            "doctype": "Customer",
-            "role": "Academics User",
-            "permlevel": 0,
-            "ptype": ["read", "write", "create"],
+            "ptype": ["read", "print"],
         },
     ]
+
+
+def restrict_academic_account_access():
+    """Remove legacy grants that let academic staff administer accounts."""
+    for doctype in ("User", "Customer"):
+        if not any(p.role == "Academics User" for p in frappe.get_meta(doctype).permissions):
+            continue
+        for permission in (
+            "read", "write", "create", "delete", "submit", "cancel", "amend",
+            "share", "email", "export", "import", "report", "print", "select",
+        ):
+            update_permission_property(doctype, "Academics User", 0, permission, 0)
 
 
 def create_permissions(doctype_permissions):

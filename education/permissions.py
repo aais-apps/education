@@ -2,6 +2,23 @@
 
 import frappe
 
+
+def can_manage_accounts(user):
+	return user == "Administrator" or "System Manager" in frappe.get_roles(user)
+
+
+def user_query_conditions(user=None, doctype=None):
+	user = user or frappe.session.user
+	if can_manage_accounts(user):
+		return ""
+	return f"`tabUser`.`name` = {frappe.db.escape(user)}"
+
+
+def user_has_permission(doc, ptype=None, user=None, debug=False):
+	user = user or frappe.session.user
+	return can_manage_accounts(user) or doc.name == user
+
+
 STUDENT_DOCUMENTS = (
 	"Assessment Result",
 	"Program Enrollment",

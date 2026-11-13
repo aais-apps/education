@@ -174,10 +174,12 @@ after_install = "education.install.after_install"
 
 permission_query_conditions = {
     "Student": "education.education.doctype.student.student.get_permission_query_conditions",
+    "User": "education.permissions.user_query_conditions",
 }
 
 has_permission = {
     "Student": "education.education.doctype.student.student.has_permission",
+    "User": "education.permissions.user_has_permission",
 }
 
 # Website users must remain scoped when accessing the generic resource API,
