@@ -95,6 +95,7 @@ class TestBillingSecurity(unittest.TestCase):
 			patch.object(frappe.db, "exists", return_value=False),
 			patch.object(billing, "get_payment_entry") as accounting,
 			patch.object(frappe, "get_doc") as record,
+			patch.object(billing, "nowdate", return_value="2026-11-13"),
 		):
 			result = billing.handle_payment_success(
 				{
