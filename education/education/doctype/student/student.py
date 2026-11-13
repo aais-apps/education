@@ -299,6 +299,9 @@ def has_permission(doc, ptype=None, user=None, debug=False):
     if not _is_portal_only_user(user):
         return True
 
+    if ptype not in (None, "read", "print", "select"):
+        return False
+
     if doc.user == user:
         return True
 

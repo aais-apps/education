@@ -184,7 +184,7 @@ has_permission = {
 # reports and print views; filtering only the Vue portal is insufficient.
 for student_doctype in (
     "Assessment Result", "Program Enrollment", "Course Enrollment", "Student Attendance",
-    "Fees", "Sales Invoice", "Student Leave Application", "Course Schedule", "Student Group",
+    "Fees", "Sales Invoice", "Student Leave Application", "Course Schedule", "Student Group", "Guardian",
 ):
     permission_query_conditions[student_doctype] = "education.permissions.query_conditions"
     has_permission[student_doctype] = "education.permissions.has_permission"

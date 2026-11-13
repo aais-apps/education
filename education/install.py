@@ -101,6 +101,13 @@ def create_guardian_role():
 def create_invoice_permissions():
     create_student_role()
     create_guardian_role()
+    from education.permissions import STUDENT_DOCUMENTS
+
+    for doctype in (*STUDENT_DOCUMENTS, "Student", "Guardian", "Course Schedule"):
+        roles = {permission.role for permission in frappe.get_meta(doctype).permissions}
+        for role in ("Student", "Guardian"):
+            if role in roles:
+                update_permission_property(doctype, role, 0, "share", 0)
     for role in ("Student", "Guardian"):
         add_permission("Sales Invoice", role, 0)
         for permission in ("read", "print"):

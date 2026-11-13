@@ -35,6 +35,12 @@ def query_conditions(user=None, doctype=None):
 	user = user or frappe.session.user
 	if not is_website_user(user):
 		return ""
+	if doctype == "Guardian":
+		from education.education.api import get_guardians_for_user
+
+		guardians = get_guardians_for_user(user)
+		values = ",".join(frappe.db.escape(guardian) for guardian in guardians)
+		return f"`tabGuardian`.`name` IN ({values})" if values else "1=0"
 	students = allowed_students(user)
 	if not students or doctype == "Student Group":
 		return "1=0"
@@ -50,6 +56,10 @@ def has_permission(doc, ptype=None, user=None, debug=False):
 	user = user or frappe.session.user
 	if not is_website_user(user):
 		return True
+	if doc.doctype == "Guardian":
+		from education.education.api import get_guardians_for_user
+
+		return ptype in (None, "read", "print", "select") and doc.name in get_guardians_for_user(user)
 	students = allowed_students(user)
 	if doc.doctype == "Student Group":
 		return False
