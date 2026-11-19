@@ -17,3 +17,11 @@ def validate_student_belongs_to_group(student, student_group):
             ),
             StudentNotInGroupError,
         )
+
+
+# Backward compatibility alias
+try:
+    from education import lms_integration
+except ImportError:
+    pass
+

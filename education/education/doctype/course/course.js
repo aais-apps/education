@@ -12,7 +12,7 @@ frappe.ui.form.on('Course', {
       } else {
         frm.add_custom_button(__('Sync to LMS'), function () {
           frappe.call({
-            method: 'education.education.lms_integration.create_or_link_lms_course',
+            method: 'education.lms_integration.create_or_link_lms_course',
             args: { course_name: frm.doc.name },
             callback: function (r) {
               if (!r.exc) {
