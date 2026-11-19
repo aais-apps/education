@@ -546,9 +546,26 @@ def sync_student_group_to_lms(doc, method=None):
     if not batch_name:
         lms_batch = frappe.new_doc("LMS Batch")
         lms_batch.title = group_name
-        lms_batch.start_date = frappe.utils.today()
+        lms_batch.start_date = "2026-01-01"
+        lms_batch.end_date = "2026-12-31"
+        lms_batch.start_time = "08:00:00"
+        lms_batch.end_time = "13:30:00"
+        lms_batch.timezone = frappe.utils.get_system_timezone() or "Asia/Dhaka"
         lms_batch.medium = "Offline"
         lms_batch.description = f"Batch class group for {group_name}"
+        lms_batch.batch_details = (
+            f"Daily class sessions, course curriculum, and coursework for {group_name}."
+        )
+
+        # Assign instructors
+        instructors = frappe.get_all("Instructor", fields=["name", "employee"])
+        for ins in instructors:
+            if ins.employee:
+                uid = frappe.db.get_value("Employee", ins.employee, "user_id")
+                if uid and frappe.db.exists("User", uid):
+                    lms_batch.append("instructors", {"instructor": uid})
+        if not lms_batch.instructors and frappe.db.exists("User", "Administrator"):
+            lms_batch.append("instructors", {"instructor": "Administrator"})
 
         # Link courses
         course_names = []
