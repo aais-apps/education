@@ -1,0 +1,183 @@
+Education,শিক্ষা ব্যবস্থাপনা
+Student,শিক্ষার্থী
+Students,শিক্ষার্থীবৃন্দ
+Student Applicant,ভর্তি আবেদনকারী
+Student Admission,শিক্ষার্থী ভর্তি
+Student Attendance,শিক্ষার্থী উপস্থিতি
+Student Attendance Tool,উপস্থিতি গ্রহণ টুল
+Student Monthly Attendance Sheet,মাসিক উপস্থিতি বিবরণী
+Student Group,শিক্ষার্থী দল / শাখা
+Student Category,শিক্ষার্থী বিভাগ
+Student Log,শিক্ষার্থী লগ
+Student Report,শিক্ষার্থী প্রতিবেদন
+Instructor,শিক্ষক
+Instructors,শিক্ষকবৃন্দ
+Guardian,অভিভাবক
+Guardians,অভিভাবকবৃন্দ
+Program,শিক্ষা কার্যক্রম / শ্রেণি
+Programs,শিক্ষা কার্যক্রমসমূহ
+Program Enrollment,কার্যক্রমে ভর্তি
+Program Enrollment Tool,শ্রেণি ভর্তি টুল
+Course,বিষয় / কোর্স
+Courses,বিষয়সমূহ / কোর্সসমূহ
+Course Enrollment,বিষয়ে অন্তর্ভুক্তি
+Course Schedule,ক্লাস রুটিন / সময়সূচি
+Course Scheduling Tool,রুটিন প্রণয়ন টুল
+Academic Year,শিক্ষাবর্ষ
+Academic Term,শিক্ষাবর্ষের প্রান্তিক / টার্ম
+Batch,ব্যাচ / শ্রেণি
+Batches,ব্যাচসমূহ
+Section,শাখা
+Roll Number,রোল নম্বর
+Admission Date,ভর্তির তারিখ
+Date of Birth,জন্মতারিখ
+Blood Group,রক্তের গ্রুপ
+Gender,লিঙ্গ
+Male,পুরুষ
+Female,নারী
+Assessment,মূল্যায়ন / পরীক্ষা
+Assessment Plan,পরীক্ষা পরিকল্পনা
+Assessment Result,পরীক্ষার ফলাফল
+Assessment Criteria,মূল্যায়নের মানদণ্ড
+Grading Scale,গ্রেডিং স্কেল
+Grade,গ্রেড
+Score,প্রাপ্ত নম্বর
+Maximum Score,পূর্ণমান
+Passing Score,পাস নম্বর
+Fees,বেতন ও ফি
+Fee Structure,ফি কাঠামো
+Fee Category,ফির ধরন
+Fee Schedule,ফি প্রদানের সময়সূচি
+Fees Payment,ফি পরিশোধ
+Paid,পরিশোধিত
+Unpaid,অপরিশোধিত
+Partially Paid,আংশিক পরিশোধিত
+Due Date,পরিশোধের শেষ তারিখ
+Outstanding Amount,বকেয়া পরিমাণ
+Receipt,রশিদ
+Student Portal,শিক্ষার্থী পোর্টাল
+My Courses,আমার বিষয়সমূহ
+My Attendance,আমার উপস্থিতি
+My Fees,আমার ফি
+Schedule,ক্লাসের সময়সূচি
+Attendance,উপস্থিতি
+Present,উপস্থিত
+Absent,অনুপস্থিত
+Leave,ছুটি
+Late,বিলম্বিত
+Student Batch,শিক্ষার্থী ব্যাচ
+Student Name,শিক্ষার্থীর নাম
+Student Email,শিক্ষার্থীর ইমেইল
+Mobile Number,মোবাইল নম্বর
+Class,ক্লাস / শ্রেণি
+Subject,বিষয়
+Subjects,বিষয়সমূহ
+Exam,পরীক্ষা
+Exams,পরীক্ষাসমূহ
+Marks,নম্বর
+Total Marks,মোট নম্বর
+Obtained Marks,প্রাপ্ত নম্বর
+Percentage,শতকরা হার
+Result,ফলাফল
+Passed,উত্তীর্ণ
+Failed,অনুত্তীর্ণ
+Notice,বিজ্ঞপ্তি
+Notices,বিজ্ঞপ্তিসমূহ
+Notice Board,নোটিশ বোর্ড
+Leave Application,ছুটির আবেদন
+Apply for Leave,ছুটির জন্য আবেদন করুন
+Reason for Leave,ছুটির কারণ
+Number of Days,দিনের সংখ্যা
+Half Day,অর্ধ দিবস
+Approved by,অনুমোদনকারী
+Pending Approval,অনুমোদনের অপেক্ষায়
+School,বিদ্যালয়
+Institute,প্রতিষ্ঠান
+Academy,একাডেমি
+Department,বিভাগ
+Session,শিক্ষাবর্ষ
+Room,কক্ষ
+Room Number,কক্ষ নম্বর
+Building,ভবন
+Capacity,ধারণক্ষমতা
+Teacher,শিক্ষক
+Teachers,শিক্ষকবৃন্দ
+Head Teacher,প্রধান শিক্ষক
+Principal,অধ্যক্ষ
+Vice Principal,উপাধ্যক্ষ
+Class Teacher,শ্রেণি শিক্ষক
+Parent,পিতা-মাতা
+Father's Name,পিতার নাম
+Mother's Name,মাতার নাম
+Occupation,পেশা
+Emergency Contact,জরুরি যোগাযোগ
+Relationship,সম্পর্ক
+Siblings,ভাই-বোন
+Address Details,ঠিকানার বিবরণ
+Permanent Address,স্থায়ী ঠিকানা
+Present Address,বর্তমান ঠিকানা
+Nationality,জাতীয়তা
+Religion,ধর্ম
+Islam,ইসলাম
+Hinduism,হিন্দু
+Buddhism,বৌদ্ধ
+Christianity,খ্রিষ্টান
+Other,অন্যান্য
+Enrollment Details,ভর্তির বিবরণ
+Application Date,আবেদনের তারিখ
+Application Status,আবেদনের অবস্থা
+Verified,যাচাইকৃত
+Rejected,প্রত্যাখ্যাত
+Tuition Fee,মাসিক বেতন
+Admission Fee,ভর্তি ফি
+Exam Fee,পরীক্ষার ফি
+Session Fee,সেশন ফি
+Transport Fee,যাতায়াত ফি
+Library Fee,লাইব্রেরি ফি
+Sports Fee,ক্রীড়া ফি
+Discount,ছাড়
+Waiver,মওকুফ
+Fine,জরিমানা
+Payment Method,পরিশোধের মাধ্যম
+Cash,নগদ
+Bank,ব্যাংক
+bKash,বিকাশ
+Nagad,নগদ
+Rocket,রকেট
+Online Payment,অনলাইন পেমেন্ট
+Transaction ID,লেনদেন নম্বর (TrxID)
+Print Receipt,রশিদ প্রিন্ট করুন
+Download Invoice,চালান ডাউনলোড করুন
+Attendance Percentage,উপস্থিতির হার
+Attendance Summary,উপস্থিতির সারাংশ
+Holiday,ছুটির দিন
+Weekend,সাপ্তাহিক ছুটি
+Working Days,কর্মদিবস
+Total Classes,মোট ক্লাস
+Classes Attended,উপস্থিত ক্লাস
+Classes Missed,অনুপস্থিত ক্লাস
+View Report Card,নম্বরপত্র দেখুন
+Report Card,নম্বরপত্র / গ্রেডশিট
+Academic Performance,একাডেমিক ফলাফল
+Remarks,মন্তব্য
+Good,ভালো
+Excellent,চমৎকার
+Satisfactory,সন্তোষজনক
+Needs Improvement,উন্নতি প্রয়োজন
+Promoted,উত্তীর্ণ
+Retained,একই শ্রেণিতে বহাল
+Transfer Certificate,ছাড়পত্র (টিসি)
+Leaving Date,বিদ্যালয় ত্যাগের তারিখ
+Reason for Leaving,বিদ্যালয় ত্যাগের কারণ
+Character Certificate,চারিত্রিক সনদপত্র
+Identity Card,পরিচয়পত্র (আইডি কার্ড)
+ID Card,আইডি কার্ড
+Generate ID Cards,আইডি কার্ড তৈরি করুন
+Bar Code,বারকোড
+QR Code,কিউআর কোড
+Photo,ছবি
+Upload Photo,ছবি আপলোড করুন
+Signature,স্বাক্ষর
+Authorized Signature,অনুমোদিত স্বাক্ষর
+Date of Issue,ইস্যুর তারিখ
+Valid Upto,মেয়াদ
