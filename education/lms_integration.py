@@ -12,10 +12,12 @@ COURSE_CURRICULUM_DATA = {
             "lessons": [
                 {
                     "title": "Fundamental and Derived Physical Quantities",
+                    "youtube": "https://www.youtube.com/watch?v=Wvqo9XAFc8c",
                     "body": "### Physical Quantities\n\nAnything in the physical world that can be measured is known as a physical quantity. Physical quantities are broadly classified into:\n\n1. **Fundamental Quantities**: Length, mass, time, electric current, thermodynamic temperature, amount of substance, and luminous intensity.\n2. **Derived Quantities**: Velocity, acceleration, force, work, energy, etc.\n\n### Measuring Instruments\n- **Slide Calipers / Vernier Scale**: Vernier Constant $VC = \\frac{s}{n}$.\n- **Screw Gauge**: Least count measurement and pitch calculation.",
                 },
                 {
                     "title": "Errors in Measurement and Scientific Dimension",
+                    "youtube": "https://www.youtube.com/watch?v=BXGW7LHsip0",
                     "body": "### Measurement Errors\n- Instrumental errors\n- Personal/observational errors\n- Random and systematic errors\n\nDimensional formulas help verify the physical consistency of equations.",
                 },
             ],
@@ -25,10 +27,12 @@ COURSE_CURRICULUM_DATA = {
             "lessons": [
                 {
                     "title": "Equations of Linear Motion",
+                    "youtube": "https://www.youtube.com/watch?v=hN-GWcsp0h8",
                     "body": "### Equations of Motion under Constant Acceleration\n\n1. $v = u + at$\n2. $s = \\frac{u + v}{2} t$\n3. $s = ut + \\frac{1}{2}at^2$\n4. $v^2 = u^2 + 2as$\n\nWhere:\n- $u$: Initial velocity\n- $v$: Final velocity\n- $a$: Uniform acceleration\n- $t$: Time elapsed\n- $s$: Distance traveled",
                 },
                 {
                     "title": "Laws of Falling Bodies",
+                    "youtube": "https://www.youtube.com/watch?v=-5HjSGDfGes",
                     "body": "Galileo Galilei formulated three laws for freely falling bodies in vacuum:\n1. All bodies falling from rest traverse equal distances in equal times.\n2. Velocity is directly proportional to time: $v \\propto t$.\n3. Distance is proportional to the square of time: $h \\propto t^2$.",
                 },
             ],
@@ -38,10 +42,12 @@ COURSE_CURRICULUM_DATA = {
             "lessons": [
                 {
                     "title": "Newton's Three Laws of Motion",
+                    "youtube": "https://www.youtube.com/watch?v=zeygDmCGb24",
                     "body": "### First Law\nEvery body persists in its state of being at rest or of moving uniformly straight forward, unless compelled to change its state by force impressed.\n\n### Second Law\nThe rate of change of momentum is proportional to the impressed force: $F = ma$.\n\n### Third Law\nTo every action there is always an equal and opposite reaction.",
                 },
                 {
                     "title": "Friction and Momentum Conservation",
+                    "youtube": "https://www.youtube.com/watch?v=Z4lStXf-GKA",
                     "body": "### Law of Conservation of Momentum\n$$m_1 u_1 + m_2 u_2 = m_1 v_1 + m_2 v_2$$\n\nTypes of friction: Static, sliding, rolling, and fluid friction.",
                 },
             ],
@@ -51,6 +57,7 @@ COURSE_CURRICULUM_DATA = {
             "lessons": [
                 {
                     "title": "Work and Kinetic Energy",
+                    "youtube": "https://www.youtube.com/watch?v=qkdewGGpLbg",
                     "body": "Work done $W = F \\cdot s \\cos \\theta$.\nKinetic Energy: $E_k = \\frac{1}{2}mv^2$.\nPotential Energy: $E_p = mgh$.\n\nPrinciple of conservation of mechanical energy states that the total mechanical energy ($E_k + E_p$) remains constant in a conservative force field.",
                 },
             ],
@@ -62,10 +69,12 @@ COURSE_CURRICULUM_DATA = {
             "lessons": [
                 {
                     "title": "Kinetic Particle Theory of Matter",
+                    "youtube": "https://www.youtube.com/watch?v=PoVfXcsqVT8",
                     "body": "All substances are made of particles (atoms, molecules, or ions) held together by forces of attraction. Particles possess kinetic energy, which increases with temperature.\n\n- **Solid**: Fixed shape and volume, closely packed.\n- **Liquid**: Fixed volume, variable shape, sliding particles.\n- **Gas**: Neither fixed shape nor volume, random rapid motion.",
                 },
                 {
                     "title": "Diffusion and Effusion",
+                    "youtube": "https://www.youtube.com/watch?v=2ZweJlANL9o",
                     "body": "Diffusion is the spontaneous spreading of particles from high to low concentration. Graham's Law dictates that lighter gases diffuse faster than heavier gases: $r \\propto \\frac{1}{\\sqrt{M}}$.",
                 },
             ],
@@ -75,6 +84,7 @@ COURSE_CURRICULUM_DATA = {
             "lessons": [
                 {
                     "title": "Subatomic Particles and Atomic Models",
+                    "youtube": "https://www.youtube.com/watch?v=PoVfXcsqVT8",
                     "body": "### Rutherford and Bohr Atomic Models\n- **Electrons**: negatively charged ($e = -1.6 \\times 10^{-19}$ C)\n- **Protons**: positively charged\n- **Neutrons**: neutral charge\n\nBohr's stationary energy levels and electron energy transitions.",
                 },
                 {
@@ -88,6 +98,7 @@ COURSE_CURRICULUM_DATA = {
             "lessons": [
                 {
                     "title": "Periodic Law and Periodic Properties",
+                    "youtube": "https://www.youtube.com/watch?v=TtrZOXl6ZFQ",
                     "body": "Properties of elements repeat periodically when arranged in order of atomic number.\n- **Atomic radius**: decreases across a period, increases down a group.\n- **Ionization energy**: increases across a period, decreases down a group.\n- **Electronegativity**: tendency to attract shared electron pairs.",
                 },
             ],
@@ -97,6 +108,7 @@ COURSE_CURRICULUM_DATA = {
             "lessons": [
                 {
                     "title": "Ionic and Covalent Bonds",
+                    "youtube": "https://www.youtube.com/watch?v=2ZweJlANL9o",
                     "body": "Ionic bonds are formed by electrostatic attraction between cations and anions (electron transfer). Covalent bonds are formed by mutual sharing of electron pairs to achieve stable octet configuration.",
                 },
             ],
@@ -340,9 +352,22 @@ def sync_course_to_lms(course_doc, method=None) -> str | None:
                 instructor_users.append(uid)
 
     # Create new LMS Course
+    COURSE_PREVIEWS = {
+        "Physics": "https://www.youtube.com/watch?v=hN-GWcsp0h8",
+        "General Mathematics": "https://www.youtube.com/watch?v=N0Xzq0SUBWE",
+        "Higher Mathematics": "https://www.youtube.com/watch?v=TZyNdOkM46g",
+        "Chemistry": "https://www.youtube.com/watch?v=TtrZOXl6ZFQ",
+        "Biology": "https://www.youtube.com/watch?v=EwxIwrMDfDQ",
+        "ICT": "https://www.youtube.com/watch?v=nkt31x1xSK4",
+        "English": "https://www.youtube.com/watch?v=kw4lGCcKxZg",
+        "SSC Academic Masterclass": "https://www.youtube.com/watch?v=hN-GWcsp0h8",
+    }
     lms_doc = frappe.new_doc("LMS Course")
     lms_doc.title = course_doc.course_name
     lms_doc.published = 1
+    lms_doc.enable_certification = 1
+    if course_doc.course_name in COURSE_PREVIEWS:
+        lms_doc.video_link = COURSE_PREVIEWS[course_doc.course_name]
     lms_doc.short_introduction = f"Curriculum coursework for {course_doc.course_name}."
     lms_doc.description = (
         course_doc.description
@@ -402,16 +427,19 @@ def populate_course_curriculum(lms_course_name: str, course_title: str):
 
         for lesson_idx, lesson_info in enumerate(chap_info.get("lessons", []), start=1):
             lesson_title = lesson_info["title"]
-            if not frappe.db.exists(
+            existing_lesson = frappe.db.get_value(
                 "Course Lesson",
                 {"course": lms_course_name, "chapter": chapter_name, "title": lesson_title},
-            ):
+                "name",
+            )
+            if not existing_lesson:
                 lesson_doc = frappe.new_doc("Course Lesson")
                 lesson_doc.course = lms_course_name
                 lesson_doc.chapter = chapter_name
                 lesson_doc.title = lesson_title
                 lesson_doc.body = lesson_info.get("body", "")
-                lesson_doc.include_in_preview = 1 if lesson_idx == 1 else 0
+                lesson_doc.youtube = lesson_info.get("youtube", "")
+                lesson_doc.include_in_preview = 1 if lesson_idx == 1 or lesson_info.get("youtube") else 0
                 lesson_doc.insert(ignore_permissions=True)
 
                 # Link in chapter lessons table
@@ -422,6 +450,16 @@ def populate_course_curriculum(lms_course_name: str, course_title: str):
                     chap_rec = frappe.get_doc("Course Chapter", chapter_name)
                     chap_rec.append("lessons", {"lesson": lesson_doc.name})
                     chap_rec.save(ignore_permissions=True)
+            else:
+                if lesson_info.get("youtube"):
+                    frappe.db.set_value(
+                        "Course Lesson",
+                        existing_lesson,
+                        {
+                            "youtube": lesson_info.get("youtube"),
+                            "include_in_preview": 1,
+                        },
+                    )
 
 
 def sync_course_enrollment_to_lms(doc, method=None):
