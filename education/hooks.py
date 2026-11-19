@@ -133,7 +133,11 @@ global_search_doctypes = {
 # home_page = "login"
 
 # website user home page (by Role)
-# role_home_page = {"Student": "edu-portal", "Guardian": "edu-portal"}
+role_home_page = {
+	"Student": "edu-portal",
+	"Guardian": "edu-portal",
+	"LMS Student": "edu-portal",
+}
 
 # Generators
 # ----------
