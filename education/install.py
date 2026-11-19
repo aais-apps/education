@@ -116,6 +116,12 @@ def create_invoice_permissions():
         for permission in ("write", "create", "delete", "submit", "cancel", "amend", "share", "email", "export", "import", "report"):
             update_permission_property("Sales Invoice", role, 0, permission, 0)
 
+    try:
+        from education.education.lms_integration import sync_all_education_lms
+        sync_all_education_lms()
+    except Exception as e:
+        frappe.log_error(f"Failed to sync Education LMS: {e}")
+
 
 def get_permissions():
     return [

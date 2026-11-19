@@ -4,6 +4,28 @@ frappe.ui.form.on('Course', {
       frm.add_custom_button(__('Add to Programs'), function () {
         frm.trigger('add_course_to_programs')
       })
+
+      if (frm.doc.lms_course) {
+        frm.add_custom_button(__('Open in LMS'), function () {
+          window.open('/lms/courses/' + frm.doc.lms_course, '_blank')
+        }, __('LMS'))
+      } else {
+        frm.add_custom_button(__('Sync to LMS'), function () {
+          frappe.call({
+            method: 'education.education.lms_integration.create_or_link_lms_course',
+            args: { course_name: frm.doc.name },
+            callback: function (r) {
+              if (!r.exc) {
+                frappe.show_alert({
+                  message: __('LMS Course synced successfully'),
+                  indicator: 'green',
+                })
+                frm.reload_doc()
+              }
+            },
+          })
+        }, __('LMS'))
+      }
     }
 
     frm.set_query('default_grading_scale', function () {

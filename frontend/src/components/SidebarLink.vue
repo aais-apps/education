@@ -56,11 +56,19 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  isExternal: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const { clearActiveStudent } = portalStore()
 
 function handleClick() {
+  if (props.isExternal || props.to === '/lms' || props.to.startsWith('/lms/') || props.to.startsWith('http')) {
+    window.location.href = props.to
+    return
+  }
   if (props.isRedirect) {
     clearActiveStudent()
   }

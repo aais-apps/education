@@ -19,8 +19,10 @@
           :label="link.label"
           :to="link.to"
           v-for="link in links"
+          :key="link.to"
           :isCollapsed="isSidebarCollapsed"
           :icon="link.icon"
+          :isExternal="link.isExternal"
           class="mx-2 my-0.5"
         />
 
@@ -98,6 +100,12 @@ const links = [
     label: 'Attendance',
     to: '/attendance',
     icon: UserCheck,
+  },
+  {
+    label: 'Online Learning',
+    to: '/lms',
+    icon: BookOpen,
+    isExternal: true,
   },
   // {
   // 	// TODO: create School Diary Page with card like CRM and from ListView go to Resource Document of each Card

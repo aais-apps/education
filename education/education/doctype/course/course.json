@@ -9,6 +9,7 @@
  "field_order": [
   "course_name",
   "department",
+  "lms_course",
   "hero_image",
   "column_break_tflc",
   "description",
@@ -36,6 +37,14 @@
    "in_standard_filter": 1,
    "label": "Department",
    "options": "Department"
+  },
+  {
+   "fieldname": "lms_course",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "LMS Course",
+   "options": "LMS Course"
   },
   {
    "fieldname": "section_break_6",

@@ -207,13 +207,21 @@ after_migrate = "education.install.create_invoice_permissions"
 # ---------------
 # Hook on document methods and events
 
-# doc_events = {
-# 	"*": {
-# 		"on_update": "method",
-# 		"on_cancel": "method",
-# 		"on_trash": "method"
-# 	}
-# }
+doc_events = {
+    "Course Enrollment": {
+        "on_update": "education.education.lms_integration.sync_course_enrollment_to_lms",
+        "on_trash": "education.education.lms_integration.remove_course_enrollment_from_lms",
+    },
+    "Program Enrollment": {
+        "on_update": "education.education.lms_integration.sync_program_enrollment_to_lms",
+    },
+    "Course": {
+        "on_update": "education.education.lms_integration.sync_course_to_lms",
+    },
+    "Student Group": {
+        "on_update": "education.education.lms_integration.sync_student_group_to_lms",
+    },
+}
 
 # Scheduled Tasks
 # ---------------
