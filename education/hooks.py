@@ -4,11 +4,11 @@ from . import __version__ as app_version
 
 app_name = "education"
 app_title = "Education"
-app_publisher = "Frappe Technologies Pvt. Ltd."
-app_description = "Education"
+app_publisher = "Paradox Tech BD / AAIS"
+app_description = "Integrated Education & Campus Management System"
 app_icon = "octicon octicon-file-directory"
-app_color = "grey"
-app_email = "hello@frappe.io"
+app_color = "blue"
+app_email = "support@paradox-bd.com"
 app_license = "GNU GPL V3"
 
 required_apps = ["erpnext"]
