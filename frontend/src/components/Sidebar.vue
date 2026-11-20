@@ -28,7 +28,7 @@
 
         <SidebarLink
           v-show="isGuardian"
-          :label="'View Students'"
+          :label="__('View Students')"
           :to="'/students'"
           :isCollapsed="isSidebarCollapsed"
           :icon="Users"
@@ -38,7 +38,7 @@
       </div>
     </div>
     <SidebarLink
-      :label="isSidebarCollapsed ? 'Expand' : 'Collapse'"
+      :label="__(isSidebarCollapsed ? 'Expand' : 'Collapse')"
       :isCollapsed="isSidebarCollapsed"
       @click="isSidebarCollapsed = !isSidebarCollapsed"
       class="m-2"
@@ -56,6 +56,7 @@
 </template>
 
 <script setup>
+import { __ } from '@/translation'
 import { storeToRefs } from 'pinia'
 import { useStorage } from '@vueuse/core'
 import SidebarLink from '@/components/SidebarLink.vue'
@@ -82,27 +83,27 @@ const links = [
   // 	icon: LayoutDashboard,
   // },
   {
-    label: 'Schedule',
+    label: __('Schedule'),
     to: '/schedule',
     icon: CalendarCheck,
   },
   {
-    label: 'Grades',
+    label: __('Grades'),
     to: '/grades',
     icon: GraduationCap,
   },
   {
-    label: 'Fees',
+    label: __('Fees'),
     to: '/fees',
     icon: Banknote,
   },
   {
-    label: 'Attendance',
+    label: __('Attendance'),
     to: '/attendance',
     icon: UserCheck,
   },
   {
-    label: 'Online Learning',
+    label: __('Online Learning'),
     to: '/lms',
     icon: BookOpen,
     isExternal: true,

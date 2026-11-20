@@ -1,7 +1,7 @@
 <template>
   <div v-if="tableData.rows.length > 0" class="px-5 py-4">
     <p v-if="!onlinePaymentEnabled" class="mb-4 rounded border border-gray-200 bg-gray-50 p-3 text-sm text-gray-700" role="status">
-      {{ isDemo ? 'Demo invoices and payments are sample records. Online payment is disabled.' : 'Online payment is unavailable. Please contact the school office.' }}
+      {{ isDemo ? __('Demo invoices and payments are sample records. Online payment is disabled.') : __('Online payment is unavailable. Please contact the school office.') }}
     </p>
     <ListView
       :columns="tableData.columns"
@@ -33,14 +33,14 @@
             variant="subtle"
             :theme="badgeColor(row.status) || 'gray'"
             size="md"
-            :label="item"
+            :label="__(item)"
           />
           <Button
             v-if="column.key === 'cta' && (row.status === 'Paid' || !onlinePaymentEnabled)"
             @click="openInvoicePDF(row)"
             class="hover:bg-gray-900 hover:text-white"
             icon-left="download"
-            :label="row.status === 'Paid' ? 'Download Invoice' : 'View Invoice'"
+            :label="row.status === 'Paid' ? __('Download Invoice') : __('View Invoice')"
           />
 
           <Button
@@ -48,7 +48,7 @@
             @click="openModal(row)"
             class="hover:bg-gray-900 hover:text-white flex flex-column items-center justify-center"
             icon-left="credit-card"
-            label="Pay Now"
+            :label="__('Pay Now')"
           />
         </ListRowItem>
       </ListRow>
@@ -63,11 +63,12 @@
   </div>
 
   <div v-else>
-    <MissingData message="No Fees found" />
+    <MissingData :message="__('No Fees found')" />
   </div>
 </template>
 
 <script setup>
+import { __ } from '@/translation'
 import { reactive, ref, watch } from 'vue'
 import {
   ListView,
@@ -130,32 +131,32 @@ const tableData = reactive({
   rows: [],
   columns: [
     {
-      label: 'Program',
+      label: __('Program'),
       key: 'program',
       width: 1,
     },
     {
-      label: 'Status',
+      label: __('Status'),
       key: 'status',
       width: 1,
     },
     {
-      label: 'Payment Date',
+      label: __('Payment Date'),
       key: 'payment_date',
       width: 1,
     },
     {
-      label: 'Due Date',
+      label: __('Due Date'),
       key: 'due_date',
       width: 1,
     },
     {
-      label: 'Amount',
+      label: __('Amount'),
       key: 'amount',
       width: 1,
     },
     {
-      label: 'Invoice',
+      label: __('Invoice'),
       key: 'cta',
       width: 1,
     },
@@ -183,7 +184,7 @@ const openModal = (row) => {
 const success = () => {
   feesResource.reload()
   createToast({
-    title: 'Payment successful',
+    title: __('Payment successful'),
     icon: 'check',
     iconClasses: 'text-green-600',
   })

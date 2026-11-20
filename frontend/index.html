@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ portal_language or 'en' }}">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" href="/favicon.png" />
@@ -12,6 +12,7 @@
     <div id="popovers"></div>
 
     <script>
+      window.educationTranslations = {{ portal_translations | default({}) | tojson }}
       window.csrf_token = '{{ frappe.session.csrf_token }}'
       window.document.title = '{{ abbr }}'
       let link = document.querySelector("link[rel~='icon']");

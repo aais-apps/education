@@ -1,7 +1,7 @@
 <template>
   <div class="w-full h-full">
     <Calendar v-if="events.length" :events="events" />
-    <MissingData v-else message="No schedule found" />
+    <MissingData v-else :message="__('No schedule found')" />
   </div>
 </template>
 

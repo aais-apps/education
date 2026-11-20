@@ -2,7 +2,7 @@
   <div class="p-6">
     <div class="mb-6">
       <h1 class="text-xl font-semibold text-gray-900">{{ greeting }}</h1>
-      <p class="text-gray-600">Select a student to view their information.</p>
+      <p class="text-gray-600">{{ __('Select a student to view their information.') }}</p>
     </div>
 
     <div
@@ -34,7 +34,7 @@
           </p>
           <div>
             <p class="truncate text-sm text-gray-500">
-              relation: {{ s.relation || 'Not Specified' }}
+              {{ __('Relation: {0}', [s.relation ? __(s.relation) : __('Not Specified')]) }}
             </p>
           </div>
         </div>
@@ -42,12 +42,13 @@
     </div>
 
     <div v-else class="text-gray-500">
-      No students are linked to your account.
+      {{ __('No students are linked to your account.') }}
     </div>
   </div>
 </template>
 
 <script setup>
+import { __ } from '@/translation'
 import { computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { portalStore } from '@/stores/portal'
@@ -59,7 +60,7 @@ const student = studentStore()
 
 const greeting = computed(() => {
   const name = portal.guardianInfo?.guardian_name
-  return name ? `Welcome, ${name}` : 'Your students'
+  return name ? __('Welcome, {0}', [name]) : __('Your students')
 })
 
 function initials(name) {

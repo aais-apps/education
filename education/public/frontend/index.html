@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ portal_language or 'en' }}">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" href="/assets/education/frontend/favicon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Frappe Education</title>
-    <script type="module" crossorigin src="/assets/education/frontend/assets/index.0951db13.js"></script>
+    <script type="module" crossorigin src="/assets/education/frontend/assets/index.599927b5.js"></script>
     <link rel="modulepreload" href="/assets/education/frontend/assets/frappe-ui.f6936d40.js">
     <link rel="stylesheet" href="/assets/education/frontend/assets/frappe-ui.005832b0.css">
     <link rel="stylesheet" href="/assets/education/frontend/assets/index.1c5e72f7.css">
@@ -16,6 +16,7 @@
     <div id="popovers"></div>
 
     <script>
+      window.educationTranslations = {{ portal_translations | default({}) | tojson }}
       window.csrf_token = '{{ frappe.session.csrf_token }}'
       window.document.title = '{{ abbr }}'
       let link = document.querySelector("link[rel~='icon']");

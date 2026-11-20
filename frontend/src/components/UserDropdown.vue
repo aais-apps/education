@@ -58,6 +58,7 @@
 </template>
 
 <script setup>
+import { __ } from '@/translation'
 import { Dropdown, FeatherIcon, Avatar } from 'frappe-ui'
 import { sessionStore } from '@/stores/session'
 import { usersStore } from '@/stores/user'
@@ -84,12 +85,12 @@ provide('showProfileDialog', showProfileDialog)
 const userDropdownOptions = [
   {
     icon: 'user',
-    label: 'Profile',
+    label: __('Profile'),
     onClick: () => (showProfileDialog.value = true),
   },
   {
     icon: 'log-out',
-    label: 'Log out',
+    label: __('Log out'),
     onClick: () => logout.submit(),
   },
 ]

@@ -26,8 +26,8 @@
       v-model="isAttendancePage"
       :options="{
         size: '2xl',
-        title: 'Apply Leave',
-        actions: [{ label: 'Save', variant: 'solid' }],
+        title: __('Apply Leave'),
+        actions: [{ label: __('Save'), variant: 'solid' }],
       }"
     >
       <template #body-content>
@@ -43,7 +43,7 @@
               !newLeave.reason
             "
             variant="solid"
-            label="Save"
+            :label="__('Save')"
             @click="applyLeave.submit()"
           />
         </div>
@@ -52,6 +52,7 @@
   </div>
 </template>
 <script setup>
+import { __ } from '@/translation'
 import { reactive, ref, watch } from 'vue'
 import { leaveStore } from '@/stores/leave'
 import { studentStore } from '@/stores/student'
@@ -67,7 +68,7 @@ const { studentInfo, currentProgram, studentGroups } = storeToRefs(
 const programName = ref('')
 const { isAttendancePage } = storeToRefs(leaveStore())
 
-const selectedGroup = ref('Select Student Group')
+const selectedGroup = ref(__('Select Student Group'))
 const allStudentGroups = ref([])
 
 const newLeave = reactive({
@@ -116,7 +117,7 @@ const attendanceResource = createResource({
 
     return attendance.map((row) => ({
       name: row.name,
-      title: row.status,
+      title: __(row.status),
       background_color: attendanceStatus[row.status],
       date: row.date,
       status: row.status,
@@ -139,7 +140,7 @@ const applyLeave = createResource({
     isAttendancePage.value = false
     attendanceResource.reload()
     createToast({
-      title: 'Leave applied successfully',
+      title: __('Leave applied successfully'),
       icon: 'check',
       iconClasses: 'text-green-600',
     })
@@ -147,7 +148,7 @@ const applyLeave = createResource({
   },
   onError: (err) => {
     createToast({
-      title: err.messages?.[0] ?? 'Error Occured',
+      title: err.messages?.[0] ?? __('An error occurred'),
       icon: 'x',
       iconClasses: 'text-red-600',
     })

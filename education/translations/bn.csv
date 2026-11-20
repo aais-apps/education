@@ -181,3 +181,40 @@ Signature,স্বাক্ষর
 Authorized Signature,অনুমোদিত স্বাক্ষর
 Date of Issue,ইস্যুর তারিখ
 Valid Upto,মেয়াদ
+Grades,ফলাফল
+Online Learning,অনলাইন শিক্ষা
+View Students,শিক্ষার্থীদের দেখুন
+Expand,প্রসারিত করুন
+Collapse,সংকুচিত করুন
+Select a student to view their information.,তথ্য দেখতে একজন শিক্ষার্থী নির্বাচন করুন।
+No students are linked to your account.,আপনার অ্যাকাউন্টে কোনো শিক্ষার্থী যুক্ত নেই।
+Relation: {0},সম্পর্ক: {0}
+Not Specified,উল্লেখ করা হয়নি
+"Welcome, {0}","স্বাগতম, {0}"
+Your students,আপনার শিক্ষার্থীরা
+No schedule found,কোনো সময়সূচি পাওয়া যায়নি
+No grades found,কোনো ফলাফল পাওয়া যায়নি
+No Fees found,কোনো ফি পাওয়া যায়নি
+Demo invoices and payments are sample records. Online payment is disabled.,এখানে চালান ও পরিশোধের তথ্য নমুনা হিসেবে দেখানো হয়েছে। অনলাইন পরিশোধ বন্ধ আছে।
+Online payment is unavailable. Please contact the school office.,অনলাইন পরিশোধের সুবিধা নেই। বিদ্যালয়ের কার্যালয়ে যোগাযোগ করুন।
+View Invoice,চালান দেখুন
+Pay Now,এখন পরিশোধ করুন
+Payment successful,পরিশোধ সফল হয়েছে
+Apply Leave,ছুটির আবেদন করুন
+Select Student Group,শিক্ষার্থী দল নির্বাচন করুন
+Leave applied successfully,ছুটির আবেদন জমা হয়েছে
+An error occurred,একটি ত্রুটি ঘটেছে
+Status,অবস্থা
+Payment Date,পরিশোধের তারিখ
+Amount,পরিমাণ
+Invoice,চালান
+Save,সংরক্ষণ করুন
+Profile,প্রোফাইল
+Log out,লগ আউট
+Overdue,মেয়াদোত্তীর্ণ
+Joining Date,যোগদানের তারিখ
+Address,ঠিকানা
+From Date,শুরুর তারিখ
+To Date,শেষের তারিখ
+Total Days,মোট দিন
+Reason,কারণ

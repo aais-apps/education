@@ -47,6 +47,7 @@
 </template>
 
 <script setup>
+import { __ } from '@/translation'
 import { FormControl, ErrorMessage } from 'frappe-ui'
 import dayjs from 'dayjs'
 import { ref } from 'vue'
@@ -92,7 +93,7 @@ const allFields = [
     section: 'Leave Details',
     fields: [
       {
-        label: 'Student',
+        label: __('Student'),
         name: 'student',
         type: 'data',
         readonly: true,
@@ -103,7 +104,7 @@ const allFields = [
     section: 'Date Details',
     fields: [
       {
-        label: 'From Date',
+        label: __('From Date'),
         name: 'from_date',
         type: 'date',
         change: (value) => {
@@ -112,7 +113,7 @@ const allFields = [
         },
       },
       {
-        label: 'To Date',
+        label: __('To Date'),
         name: 'to_date',
         type: 'date',
         change: (value) => {
@@ -121,13 +122,13 @@ const allFields = [
         },
       },
       {
-        label: 'Total Days',
+        label: __('Total Days'),
         name: 'total_days',
         type: 'number',
         readonly: true,
       },
       {
-        label: 'Reason',
+        label: __('Reason'),
         name: 'reason',
         type: 'textarea',
       },

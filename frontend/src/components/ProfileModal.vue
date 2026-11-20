@@ -2,7 +2,7 @@
   <Dialog
     v-model="showProfileDialog"
     :options="{
-      title: 'Profile',
+      title: __('Profile'),
       size: 'xl',
     }"
   >
@@ -68,6 +68,7 @@
 </template>
 
 <script setup>
+import { __ } from '@/translation'
 import { Dialog, Avatar, FeatherIcon } from 'frappe-ui'
 import { inject } from 'vue'
 import { studentStore } from '@/stores/student'
@@ -127,19 +128,19 @@ const infoFormat = [
     section: 'section 1',
     fields: [
       {
-        label: 'Mobile Number',
+        label: __('Mobile Number'),
         value: profileInfo.mobile_number,
       },
       {
-        label: 'Joining Date',
+        label: __('Joining Date'),
         value: profileInfo.joining_date,
       },
       {
-        label: 'Date of Birth',
+        label: __('Date of Birth'),
         value: profileInfo.date_of_birth,
       },
       {
-        label: 'Address',
+        label: __('Address'),
         value: [
           profileInfo?.address_line_1,
           profileInfo?.address_line_2,
@@ -158,15 +159,15 @@ const infoFormat = [
     section: 'section 2',
     fields: [
       {
-        label: 'Blood Group',
+        label: __('Blood Group'),
         value: profileInfo.blood_group,
       },
       {
-        label: 'Gender',
+        label: __('Gender'),
         value: profileInfo.gender,
       },
       {
-        label: 'Nationality',
+        label: __('Nationality'),
         value: profileInfo.nationality,
       },
     ],
@@ -175,7 +176,7 @@ const infoFormat = [
 
 if (!isStudent) {
   infoFormat[0].fields.splice(1, 1, {
-    label: 'Occupation',
+    label: __('Occupation'),
     value: profileInfo.occupation,
   })
 }

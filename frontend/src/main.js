@@ -1,4 +1,5 @@
 import './index.css'
+import { __ } from './translation'
 
 import { createApp } from 'vue'
 import router from './router'
@@ -21,6 +22,9 @@ let pinia = createPinia()
 let app = createApp(App)
 
 setConfig('resourceFetcher', frappeRequest)
+
+app.config.globalProperties.__ = __
+window.__ = __
 
 app.use(pinia)
 app.use(router)

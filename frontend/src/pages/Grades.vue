@@ -15,10 +15,11 @@
     </div>
   </div>
   <div v-else>
-    <MissingData message="No grades found" />
+    <MissingData :message="__('No grades found')" />
   </div>
 </template>
 <script setup>
+import { __ } from '@/translation'
 import { ListView, createListResource } from 'frappe-ui'
 import { ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
@@ -31,11 +32,11 @@ const { studentInfo, currentProgram } = storeToRefs(studentStore())
 const tableData = ref({
   columns: [
     {
-      label: 'Course',
+      label: __('Course'),
       key: 'course',
     },
     {
-      label: 'Batch',
+      label: __('Batch'),
       key: 'batch',
     },
   ],
@@ -59,8 +60,8 @@ const grades = createListResource({
   },
   onSuccess: (response) => {
     tableData.value.columns = [
-      { label: 'Course', key: 'course' },
-      { label: 'Batch', key: 'batch' },
+      { label: __('Course'), key: 'course' },
+      { label: __('Batch'), key: 'batch' },
     ]
     tableData.value.rows = []
 
